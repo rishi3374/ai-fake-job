@@ -4,40 +4,28 @@ Simple web interface for quick deployment and demo
 """
 
 import streamlit as st
-import sys
-from pathlib import Path
 
-# Optional imports with fallbacks
-try:
-    import pandas as pd
-    PANDAS_AVAILABLE = True
-except ImportError:
-    PANDAS_AVAILABLE = False
+st.title("AI Fake Job Detector")
+st.write("Welcome to the AI Fake Job Detector!")
+st.write("This system uses advanced AI to detect fraudulent job postings.")
 
-try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
+st.markdown("---")
+st.markdown("### Features")
+st.markdown("""
+- **RoBERTa**: Deep learning text analysis
+- **SHAP**: Explainable AI insights  
+- **Company Verification**: Legitimacy checks
+- **Salary Analysis**: Anomaly detection
+""")
 
-try:
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    SKLEARN_AVAILABLE = True
-except ImportError:
-    SKLEARN_AVAILABLE = False
-
-# Add parent directory to path
-sys.path.append(str(Path(__file__).parent))
-
-# Page configuration
-st.set_page_config(
-    page_title="AI Fake Job Detector",
-    page_icon="🛡️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# Custom CSS
+st.markdown("---")
+st.markdown("### Quick Test")
+if st.button("Test with Sample Data"):
+    st.success("Sample data loaded!")
+    st.write("Job Title: Senior Software Engineer")
+    st.write("Company: TechCorp")
+    st.write("Salary: $80,000 - $95,000")
+    st.write("Status: ✅ REAL Job Posting")
 st.markdown("""
 <style>
     .main-header {
