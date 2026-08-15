@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build:
+      context: .
+      target: backend
+    container_name: fake-job-detector-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/fake_job_detector
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    depends_on:
+      - postgres
+    networks:
+      - fake-job-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: .
+      target: frontend
+    container_name: fake-job-detector-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - fake-job-network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: fake-job-detector-postgres
+    environment:
+      - POSTGRES_DB=fake_job_detector
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fake-job-network
+    restart: unless-stopped
+
+  # MLflow (for experiment tracking)
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.7.1
+    container_name: fake-job-detector-mlflow
+    ports:
+      - "5000:5000"
+    command: mlflow server --host 0.0.0.0 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow/artifacts
+    volumes:
+      - mlflow_data:/mlflow
+    networks:
+      - fake-job-network
+    restart: unless-stopped
+
+  # Production Nginx (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: fake-job-detector-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend/dist:/usr/share/nginx/html
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - fake-job-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+networks:
+  fake-job-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mlflow_data:

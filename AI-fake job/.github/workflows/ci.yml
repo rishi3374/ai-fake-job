@@ -1,0 +1,128 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: [3.12]
+        node-version: [18]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Set up Node ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov black flake8 mypy
+    
+    - name: Install Node dependencies
+      run: |
+        cd frontend
+        npm install
+    
+    - name: Lint Python code
+      run: |
+        flake8 backend/ models/ preprocessing/ --max-line-length=100
+        black --check backend/ models/ preprocessing/
+    
+    - name: Type check Python code
+      run: |
+        mypy backend/ models/ preprocessing/ --ignore-missing-imports
+    
+    - name: Run Python tests
+      run: |
+        pytest tests/ -v --cov=backend --cov=models --cov=preprocessing --cov-report=xml
+    
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test -- --coverage --watchAll=false
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml,./frontend/coverage/coverage-final.json
+        flags: unittests
+        name: codecov-umbrella
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build Docker images
+      run: |
+        docker-compose build
+    
+    - name: Test Docker containers
+      run: |
+        docker-compose up -d
+        docker-compose ps
+        # Wait for services to be healthy
+        sleep 30
+        # Test API health
+        curl -f http://localhost:8000/health || exit 1
+        docker-compose down
+    
+    - name: Login to Docker Hub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Push to Docker Hub
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      run: |
+        docker-compose push
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production..."
+        # Add deployment commands here
+        # For example: kubectl apply -f k8s/
+        # Or: ansible-playbook deploy.yml
+    
+    - name: Notify deployment
+      run: |
+        echo "Deployment completed successfully"

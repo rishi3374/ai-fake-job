@@ -1,0 +1,52 @@
+============================================================
+AI FAKE JOB DETECTOR - MODEL EVALUATION REPORT
+============================================================
+Generated: 2026-08-15 20:34:05
+
+SUMMARY
+----------------------------------------
+Total models evaluated: 2
+
+MODEL COMPARISON
+----------------------------------------
+              Model  Accuracy  Precision  Recall  F1-Score  ROC-AUC  Avg Precision
+logistic_regression       1.0        1.0     1.0       1.0      1.0            1.0
+      random_forest       1.0        1.0     1.0       1.0      1.0            1.0
+
+DETAILED RESULTS
+----------------------------------------
+
+LOGISTIC_REGRESSION
+------------------------------
+Accuracy: 1.0000
+Precision: 1.0000
+Recall: 1.0000
+F1-Score: 1.0000
+ROC-AUC: 1.0000
+Average Precision: 1.0000
+
+Confusion Matrix:
+  TN: 10  FP: 0
+  FN: 0  TP: 10
+
+RANDOM_FOREST
+------------------------------
+Accuracy: 1.0000
+Precision: 1.0000
+Recall: 1.0000
+F1-Score: 1.0000
+ROC-AUC: 1.0000
+Average Precision: 1.0000
+
+Confusion Matrix:
+  TN: 10  FP: 0
+  FN: 0  TP: 10
+
+============================================================
+RECOMMENDATIONS
+============================================================
+Best performing model: logistic_regression
+Best F1-Score: 1.0000
+
+Recommendation: Use the best performing model for production
+deployment. Consider ensemble methods for improved robustness.

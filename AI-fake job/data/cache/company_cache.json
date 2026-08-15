@@ -1,0 +1,82 @@
+{
+  "TechCorp Solutions_https://techcorp.com": {
+    "company_name": "TechCorp Solutions",
+    "verification_timestamp": "2026-08-15T20:29:45.571375",
+    "checks": {
+      "domain_check": {
+        "has_custom_domain": true,
+        "domain_age": "not_checked",
+        "suspicious_domain": false,
+        "score": 0.8
+      },
+      "email_check": {
+        "has_company_email": true,
+        "uses_free_provider": false,
+        "suspicious_email": false,
+        "score": 0.8
+      },
+      "profile_check": {
+        "has_profile": true,
+        "profile_length": 129,
+        "has_detailed_info": true,
+        "score": 0.4
+      },
+      "name_check": {
+        "has_name": true,
+        "name_length": 18,
+        "suspicious_name": false,
+        "score": 0.3
+      },
+      "online_presence": {
+        "has_website": true,
+        "website_accessible": true,
+        "social_media_presence": false,
+        "news_mentions": false,
+        "score": 0.5
+      }
+    },
+    "legitimacy_score": 0.5850000000000001,
+    "is_legitimate": true,
+    "risk_level": "Medium"
+  },
+  "EasyMoney123_https://tempmail.com": {
+    "company_name": "EasyMoney123",
+    "verification_timestamp": "2026-08-15T20:29:47.019657",
+    "checks": {
+      "domain_check": {
+        "has_custom_domain": false,
+        "domain_age": "not_checked",
+        "suspicious_domain": true,
+        "score": 0.0
+      },
+      "email_check": {
+        "has_company_email": false,
+        "uses_free_provider": true,
+        "suspicious_email": false,
+        "score": 0.3
+      },
+      "profile_check": {
+        "has_profile": false,
+        "profile_length": 0,
+        "has_detailed_info": false,
+        "score": 0.0
+      },
+      "name_check": {
+        "has_name": true,
+        "name_length": 12,
+        "suspicious_name": true,
+        "score": -0.2
+      },
+      "online_presence": {
+        "has_website": true,
+        "website_accessible": true,
+        "social_media_presence": false,
+        "news_mentions": false,
+        "score": 0.5
+      }
+    },
+    "legitimacy_score": 0.13,
+    "is_legitimate": false,
+    "risk_level": "High"
+  }
+}
