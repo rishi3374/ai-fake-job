@@ -6,7 +6,13 @@ Simple web interface for quick deployment and demo
 import streamlit as st
 import sys
 from pathlib import Path
-import pandas as pd
+
+# Optional imports with fallbacks
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent))
